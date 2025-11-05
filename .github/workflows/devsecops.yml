@@ -1,0 +1,42 @@
+name: DevSecOps CI - Node & Docker Security Scan
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    name: Ejecutar escaneo de seguridad con Snyk
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Instalar dependencias del proyecto
+        run: npm install
+
+      - name: Instalar Snyk CLI
+        run: npm install -g snyk
+
+      - name: Autenticarse con Snyk
+        run: snyk auth ${{ secrets.SNYK_TOKEN }}
+
+      - name: Escanear vulnerabilidades en dependencias (npm)
+        run: snyk test --severity-threshold=low
+
+      - name: Construir imagen Docker
+        run: docker build -t devsecops-lab .
+
+      - name: Escanear vulnerabilidades en imagen Docker
+        run: snyk container test devsecops-lab --severity-threshold=low
+
+      - name: Monitorear vulnerabilidades (subir a Snyk Dashboard)
+        run: snyk monitor
