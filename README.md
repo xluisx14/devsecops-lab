@@ -150,7 +150,7 @@ El pipeline CI/CD se ejecutará automáticamente al hacer push o pull request ha
 
 ✍️ Autor
 
-Luis Daniel
+Luis Perez Y Natalia Buendia
 Estudiante de Ingeniería de Sistemas
 📍 Colombia
 💻 DevSecOps | Cloud | Backend | Ciberseguridad
